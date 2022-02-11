@@ -9,11 +9,16 @@ import (
 )
 
 func main() {
-	var userInput string = os.Args[1] // user input from the VSC terminal
-	fmt.Println("you typed: ", userInput)
-	inputToSlice := strings.Fields(userInput) // separates the user input around each instance of a white space and populates a slice of strings
-	fmt.Println("first slice: ", inputToSlice[0])
-	var bannerSlice []string
+	var inputToSlice []string
+	userInput := os.Args // user input from the VSC terminal
+
+	for i := 1; i < len(os.Args); i++ {
+		inputToSlice = append(inputToSlice, userInput[i]) // put user input into a string slice
+	}
+
+	var bannerSlices []string //a slice of strings containing the 95 images from standard.txt file
+	counter := 0
+	//var strLine []string
 
 	banner, err := os.Open("standard.txt")
 	if err != nil {
@@ -22,19 +27,23 @@ func main() {
 
 	defer banner.Close() // the file descriptor is closed at the end of the main function
 
-	scanner := bufio.NewScanner(banner) // scan the 'standard.txt' file
-	line := scanner.Split(bufio.ScanWords) // split the content of 'standard.txt'file by line (= image)
-	for scanner.Scan() {
-		bannerSlice = append(bannerSlice, line) // populate the bannerSlice
+	scanner := bufio.NewScanner(banner) // make new Scanner
+	for scanner.Scan() {                //scan the 'standard.txt' file
+		line := scanner.Text()                   // store 'standard.txt' into the variable 'line'
+		bannerSlices = strings.Split(line, "\n") //separate 'standard.txt' after each instance of a new line and populate a slice of strings
+		fmt.Println("length of bannerSlices: ", counter, bannerSlices)
+		counter = counter + 1
+		//fmt.Println(bannerSlices)
+		//for j := 10; j <= 35; j++ {
+		//	fmt.Println("printing line by line", bannerSlices[j])
+		//}
 	}
-	if err := scanner.Err(); err != nil { 
-        fmt.Println(err)
-    }
-	  
-	theMap := make(map[string]rune) // matching the strings from 'standard.txt' to the runes in each userInput sub-slice
-		
-	m[bannerSlice[0]] = rune(31)
-
-
+	if err := scanner.Err(); err != nil {
+		fmt.Println(err)
 	}
+
+	//theMap := make(map[string]rune) // matching 95 images from 'standard.txt' to 95 runes in the ascii table, from dec 32 to dec 126.
+
+	//m[bannerSlice[0]] = rune(31)
+
 }
