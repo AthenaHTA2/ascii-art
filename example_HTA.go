@@ -11,6 +11,7 @@ import (
 func main() {
 	var inputToSlice []string
 	userInput := os.Args // user input from the VSC terminal
+	var word []string
 
 	for i := 1; i < len(os.Args); i++ {
 		inputToSlice = append(inputToSlice, userInput[i]) // put user input into a string slice
@@ -33,11 +34,17 @@ func main() {
 		bannerLines = append(bannerLines, line+"\n") // separate 'standard.txt' after each instance of a new line and populate bannerSlices string slice
 	}
 	var bannerImages []string
+
 	// fmt.Println(bannerLines[8:16])
 
 	for i := 0; i < len(bannerLines); i += 9 {
 		bannerImages = append(bannerImages, strings.Join(bannerLines[i:i+9], ""))
 	}
+
+	// bannerImagesString := strings.Join(bannerImagesSlice, "")
+
+	// bannerImages = strings.SplitAfter(bannerImagesString, "\n")  // I am trying to drop the 'new line' from line 34 but is not working :-)
+
 	// fmt.Println(bannerImages[1:95])
 	if err := scanner.Err(); err != nil {
 		fmt.Println(err)
@@ -145,13 +152,22 @@ func main() {
 
 	// fmt.Println("imagesMap: \n", imagesMap)
 
-	for i := 0; i < len(inputToSlice); i++ { // cycle through each word from terminal
-		runeInput := []rune(inputToSlice[i]) // cast input word to rune
-		for j := 0; j < len(runeInput); j++ {
-			if runeInput[j] >= ' ' && runeInput[j] <= '~' {
-				fmt.Println(imagesMap[runeInput[j]])
+	for i := 0; i < len(inputToSlice); i++ { // cycle through each string slice from terminal input
+		runeInput := []rune(inputToSlice[i]) // cast each input slice to a rune slice
+
+		for j := 0; j < len(runeInput); j++ { // cycle through each letter in the rune slice
+			if runeInput[j] == 10 {
+				fmt.Printf(word[j])
+				fmt.Println()
+			}
+			if len(runeInput) != 0 && inputToSlice[i] != "\\n" {
+				if runeInput[j] >= ' ' && runeInput[j] <= '~' { // if the letter matches any of the ASCII characters in the 32 to 126 range
+					word = append(word, imagesMap[runeInput[j]]) // print the corresponding image in imagesMap
+				}
 			}
 		}
 
 	}
+	result := strings.Join(word, " ")
+	fmt.Printf("%s", result)
 }
