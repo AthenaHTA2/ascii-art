@@ -1,0 +1,96 @@
+package main
+
+import (
+	"bufio"
+	"fmt"
+	"os"
+	"strings"
+)
+
+/* the main file that was in a separate file. package was asciiart
+package main
+
+import (
+	asciiart "ascii"
+	"os"
+)
+
+func main() {
+	arg := os.Args[1]
+	/*m := asciiart.MakeMapstruct()
+	asciiart.PrintMap(arg, m) (close comment here)
+	asciiart.MakeMapSimple(arg)
+}
+end of main file here*/
+
+func MakeMapSimple(input string) {
+	// Read file using ioutil
+	content, _ := os.Open("standard.txt")
+
+	// Use bufio scanner to scan file content line by line.
+	scanner := bufio.NewScanner(content)
+
+	// Variable to keep track of position in file.
+	Rune := 31
+	// Map to store characters.
+	ascii_map := make(map[rune][]string)
+
+	// For every line in stabdard.txt
+	for scanner.Scan() {
+		// If empty string, increment Rune to access next key.
+		if scanner.Text() == "" {
+			Rune++
+			// Else append line by line to the array of strings.
+		} else {
+			ascii_map[rune(Rune)] = append(ascii_map[rune(Rune)], scanner.Text())
+		}
+	}
+
+	// Array to split by \n later.
+	var split []string
+	// Edge case
+	if input == "\\n" {
+		fmt.Println()
+		os.Exit(0)
+		// If there are any \n in input, and the last character is not \n
+	} else if strings.Contains(input, "\\n") && string(input[len(input)-2]) != "\\" && string(input[len(input)-1]) != "n" {
+		// Split by \n.
+		split = strings.Split(input, "\\n")
+		// Loop over split array.
+		for j := 0; j < len(split); j++ {
+			// Loop over each line in ascii character.
+			for i := 0; i < 8; i++ {
+				// Print one line of every character the input.
+				for _, char := range split[j] {
+					fmt.Print(ascii_map[char][i])
+				}
+				// Print new line to go to next row.
+				fmt.Println()
+			}
+		}
+		os.Exit(0)
+	} else if input == "" {
+		os.Exit(0)
+	}
+
+	// Edge case variable. If it is equal to 1, print a new line.
+	edge := 0
+	// If the last two characters are \ and n, remove them from the input variable and increment edge case.
+	if string(input[len(input)-2]) == "\\" && string(input[len(input)-1]) == "n" {
+		input = input[:len(input)-2]
+		edge++
+	}
+
+	// Print ascii character.
+	for i := 0; i < 8; i++ {
+		for _, char := range input {
+			fmt.Print(ascii_map[char][i])
+		}
+
+		fmt.Println()
+	}
+	// If edge case is met, print new line.
+	if edge == 1 {
+		fmt.Println()
+	}
+}
